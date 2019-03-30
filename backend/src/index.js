@@ -4,10 +4,13 @@ const Restaurant = require('./model/restaurant')
 
 
 const express = require('express')
+
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
 const app = express()
+const expressWs = require('express-ws')(app);
+
 const port = 17001
 
 let db
@@ -43,6 +46,14 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
     next()
 })
+
+
+
+app.ws('/ws', function(ws, req) {
+    ws.on('message', function(msg) {
+        ws.send(msg);
+    });
+});
 
 
 /// USER REGISTRATION
