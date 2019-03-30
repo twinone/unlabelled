@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   Input,
   Card,
@@ -7,8 +7,10 @@ import {
   CardContent,
   Button
 } from '@material-ui/core'
+import AuthContext from '../globals/useToken'
+import FoodTypes from '../components/FoodTypes'
 
-const foodTypes = ['Burger', 'Kebab', 'Pizza']
+const FOOD_TYPES = ['Burger', 'Kebab', 'Pizza']
 const url = '/restaurant/register'
 
 const registerRestaurant = ({ name, latLng, types }) =>
@@ -29,9 +31,10 @@ function RegisterScreen() {
   const [latLng, setLatLng] = useState({ lat: '', lng: '' })
   const [types, setTypes] = useState([])
   const { lat, lng } = latLng
+  const [_, setAuth] = useContext(AuthContext)
 
   const onSubmit = () => {
-    if ((name === '') | (lat === '') | (lng === ''))
+    if (name === '' || lat === '' || lng === '')
       alert('Please enter all the fields.')
     else {
       registerRestaurant({ name, latLng, types }).then(r => {
@@ -40,28 +43,20 @@ function RegisterScreen() {
           alert(r.error)
           return null
         } else {
-          console.log('SUCCESS!!!!!')
-          return r.token
+          setAuth({
+            restaurant: name,
+            token: r.token
+          })
         }
       })
     }
   }
 
   return (
-    <div
-      style={{
-        flex: 1,
-        //  position: 'absolute',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: !'100%',
-        paddingTop: '200px',
-        alignSelf: 'center'
-      }}
-    >
-      <Card style={{ flexDirection: 'column', width: '400px' }}>
+    <div style={styles.container}>
+      <Card style={styles.card}>
         <CardHeader title="UNLABELLED for restaurants" />
-        <CardContent style={{ flexDirection: 'column' }}>
+        <CardContent style={styles.content}>
           <Input
             placeholder="restaurant name"
             value={name}
@@ -79,30 +74,29 @@ function RegisterScreen() {
               onChange={e => setLatLng({ lat, lng: e.target.value })}
             />
           </div>
-          <div style={{ flexDirection: 'row', padding: 8 }}>
-            {foodTypes.map(e => (
-              <Chip
-                key={e}
-                onClick={() => {
-                  if (types.includes(e)) {
-                    types.splice(types.indexOf(e), 1)
-                    setTypes([...types])
-                  } else {
-                    setTypes([...types, e])
-                  }
-                }}
-                label={e}
-                variant={types.includes(e) ? 'default' : 'outlined'}
-                padding={4}
-              />
-            ))}
-          </div>
-
+          <FoodTypes
+            currentTypes={types}
+            foodTypes={FOOD_TYPES}
+            setTypes={setTypes}
+          />
           <Button onClick={onSubmit}>Register</Button>
         </CardContent>
       </Card>
     </div>
   )
+}
+
+const styles = {
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: !'100%',
+    paddingTop: '200px',
+    alignSelf: 'center'
+  },
+  card: { flexDirection: 'column', width: '400px' },
+  content: { flexDirection: 'column' }
 }
 
 export default RegisterScreen
