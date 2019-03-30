@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
     "express": "latest",
-    "mongoose": "^5.4.20"
+    "mongoose": "^5.4.20",
+    "body-parser": "latest",
+    "cookie-parser": "latest"
   }
 }
