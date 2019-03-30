@@ -1,7 +1,7 @@
 let mongoose = require("mongoose")
 
 
-let userSchema = new mongoose.Schema({
+let schema = new mongoose.Schema({
     email: String,
     password: String,
     location: {
@@ -10,4 +10,4 @@ let userSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', schema)
