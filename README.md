@@ -40,6 +40,7 @@ POST Body:
   toppings: []String,
   deadline: int,
   maxPrice: int (cents),
+  location: {lat: Number, lng: Number}
 }
 ```
 
