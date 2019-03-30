@@ -18,7 +18,7 @@ The user will be logged in after registering
 POST Body: 
 {
   name: String,
-  location: [lat: Number, lng: Number],
+  location: {lat: Number, lng: Number},
   foodTypes: []String : foodType,
 }
 ```
