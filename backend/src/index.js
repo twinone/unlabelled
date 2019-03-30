@@ -9,7 +9,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
 const app = express()
-const expressWs = require('express-ws')(app);
+const expressWs = require('express-ws')(app)
 
 const port = 17001
 
@@ -47,15 +47,30 @@ app.use(function (req, res, next) {
     next()
 })
 
+//conns = []
+const wss = expressWs.getWss('/ws')
+
+function broadcast(msg) {
+    wss.clients.forEach(function (conn) {
+        conn.send(msg)
+    })
+}
+
+setInterval(function () {
+    wss.clients.forEach(function (conn) {
+        conn.send('{"ping":true}')
+    })
+}, 5000)
 
 
-app.ws('/ws', function(ws, req) {
+app.ws('/ws', function (ws, req) {
     console.log("handling ws")
-    ws.on('message', function(msg) {
-        console.log("sending msg:",msg)
-        ws.send(msg);
-    });
-});
+
+
+    ws.on('message', function (msg) {
+        console.log("got msg:", msg)
+    })
+})
 
 
 /// USER REGISTRATION
@@ -114,6 +129,11 @@ app.get('/login/:email/:pass', (req, res) => {
         resp.token = users[0]._id
         res.json(resp)
     })
+})
+
+
+app.post('/order', (req, res) => {
+    broadcast(JSON.stringify(req.body))
 })
 
 
