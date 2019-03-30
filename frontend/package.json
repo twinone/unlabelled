@@ -21,7 +21,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "",
+  "proxy": "http://twinone.xyz:17001",
   "author": "Jovan Kanevche",
   "browserslist": [
     ">0.2%",

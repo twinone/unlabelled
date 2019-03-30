@@ -1,12 +1,5 @@
 import React, { useState, useContext } from 'react'
-import {
-  Input,
-  Card,
-  Chip,
-  CardHeader,
-  CardContent,
-  Button
-} from '@material-ui/core'
+import { Input, Card, CardHeader, CardContent, Button } from '@material-ui/core'
 import AuthContext from '../globals/useToken'
 import FoodTypes from '../components/FoodTypes'
 
@@ -24,7 +17,7 @@ const registerRestaurant = ({ name, latLng, types }) =>
       location: latLng,
       foodTypes: types
     })
-  })
+  }).then(r => r.json())
 
 function RegisterScreen() {
   const [name, setName] = useState('')
