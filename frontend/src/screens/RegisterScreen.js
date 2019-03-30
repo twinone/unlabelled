@@ -7,13 +7,12 @@ import {
   CardContent,
   Button
 } from '@material-ui/core'
-import { BASE_URL } from '../constants'
 
 const foodTypes = ['Burger', 'Kebab', 'Pizza']
 const url = '/restaurant/register'
 
 const registerRestaurant = ({ name, latLng, types }) =>
-  fetch(BASE_URL + url, {
+  fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
