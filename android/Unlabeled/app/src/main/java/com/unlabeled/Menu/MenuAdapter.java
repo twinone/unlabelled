@@ -2,7 +2,6 @@
 package com.unlabeled.Menu;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
-        public RelativeLayout mRoot;
+        private TextView mTextView;
+        private RelativeLayout mRoot;
         public MyViewHolder(RelativeLayout v) {
             super(v);
             mRoot = v;
@@ -32,7 +31,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     }
 
     public MenuAdapter(ArrayList<MenuItem> myDataset, OnItemClickListener listener) {
-        Log.d("Adapter", "Working");
         mDataset = myDataset;
         myListener = listener;
     }

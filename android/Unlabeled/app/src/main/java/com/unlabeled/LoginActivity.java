@@ -16,8 +16,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.unlabeled.Menu.MenuAdapter;
-import com.unlabeled.Menu.MenuItem;
 import com.unlabeled.Menu.UserActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -33,13 +31,6 @@ public class LoginActivity extends AppCompatActivity {
         passw = findViewById(R.id.input_password);
         login = findViewById(R.id.btn_login);
 
-       /* login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), UserActivity.class);
-                startActivity(i);
-            }
-        });*/
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,16 +44,19 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String response) {
                                 // Display the first 500 characters of the response string.
-                                Log.d("Token", response);
                                 String result = new Gson().fromJson(response, JsonObject.class).get("status").toString();
 
-                                Log.d("Token",result);
+                                if(result.equals("error")){
+                                    // TODO throw error
 
-                                //if(result == "error")
+                                }
 
-                                //else
-                                Intent i = new Intent(getApplicationContext(), UserActivity.class);
-                                startActivity(i);
+                                else {
+                                    String token = new Gson().fromJson(response, JsonObject.class).get("token").toString();
+                                    Intent i = new Intent(LoginActivity.this, UserActivity.class);
+                                    i.putExtra("token",token);
+                                    startActivity(i);
+                                }
                             }
                         }, new Response.ErrorListener() {
                     @Override

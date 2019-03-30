@@ -44,34 +44,6 @@
                 android:hint="Password" />
         </android.support.design.widget.TextInputLayout>
 
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="User"
-                android:padding="12dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp" />
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Restaurant"
-                android:padding="12dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                android:layout_toRightOf="@id/button"/>
-
-
-
-
-        </RelativeLayout>
         <Button
             android:id="@+id/btn_reg"
             android:layout_width="match_parent"

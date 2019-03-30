@@ -1,5 +1,6 @@
 package com.unlabeled;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.unlabeled.Menu.UserActivity;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText email;
@@ -39,6 +43,21 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onResponse(String response) {
                                 // Display the first 500 characters of the response string.
                                 Log.d("Token", response);
+                                String result = new Gson().fromJson(response, JsonObject.class).get("status").toString();
+
+                                Log.d("Token",result);
+
+                                if(result.equals("error")){
+
+
+                                }
+
+                                else {
+                                    String token = new Gson().fromJson(response, JsonObject.class).get("token").toString();
+                                    Intent i = new Intent(RegisterActivity.this, UserActivity.class);
+                                    i.putExtra("token",token);
+                                    startActivity(i);
+                                }
                             }
                         }, new Response.ErrorListener() {
                     @Override
