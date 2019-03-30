@@ -104,6 +104,8 @@ const AcceptedOrder = ({ name, picture, deliverTime }) => (
   </Card>
 )
 
+const WEB_SOCKET_URL = 'ws://twinone.xyz:17001/ws'
+
 function DashboardScreen() {
   const name = 'Restaurant'
   const types = ['Burger', 'Kebab']
@@ -111,7 +113,7 @@ function DashboardScreen() {
   const onDelete = () => {}
 
   useEffect(() => {
-    const socket = new WebSocket('/ws')
+    const socket = new WebSocket(WEB_SOCKET_URL)
     console.log(socket)
     socket.addEventListener('message', e => {
       console.log(e)
