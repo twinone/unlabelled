@@ -7,13 +7,13 @@ import {
   CardContent,
   Button
 } from '@material-ui/core'
+import { BASE_URL } from '../constants'
 
 const foodTypes = ['Burger', 'Kebab', 'Pizza']
 const url = '/restaurant/register'
-const base_url = '22323gg232g3'
 
-const registerRestaurant = (name, latLng, types) =>
-  fetch(base_url + url, {
+const registerRestaurant = ({ name, latLng, types }) =>
+  fetch(BASE_URL + url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -26,15 +26,26 @@ const registerRestaurant = (name, latLng, types) =>
   })
 
 function RegisterScreen() {
-  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
   const [latLng, setLatLng] = useState({ lat: '', lng: '' })
   const [types, setTypes] = useState([])
   const { lat, lng } = latLng
 
   const onSubmit = () => {
-    if ((email === '') | (lat === '') | (lng === ''))
+    if ((name === '') | (lat === '') | (lng === ''))
       alert('Please enter all the fields.')
-    else console.log(email, latLng, types)
+    else {
+      registerRestaurant({ name, latLng, types }).then(r => {
+        console.log(r)
+        if (r.error) {
+          alert(r.error)
+          return null
+        } else {
+          console.log('SUCCESS!!!!!')
+          return r.token
+        }
+      })
+    }
   }
 
   return (
@@ -54,8 +65,8 @@ function RegisterScreen() {
         <CardContent style={{ flexDirection: 'column' }}>
           <Input
             placeholder="restaurant name"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            value={name}
+            onChange={e => setName(e.target.value)}
           />
           <div style={{ flexDirection: 'row' }}>
             <Input
