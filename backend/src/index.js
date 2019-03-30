@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({extended: true})) // support encoded bodies
 
 /// USER REGISTRATION
 
-app.get('/register/:email/:pass/:lat/:lng', (req, res) => {
+app.get('/register/:email/:pass', (req, res) => {
     //Remove all users
     // User.find(function (err, users) {
     //     if (err) return res.json(newErr("could not find"))
