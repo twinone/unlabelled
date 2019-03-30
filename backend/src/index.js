@@ -37,9 +37,6 @@ app.use(cookieParser())
 app.use(bodyParser.json()) // support json encoded bodies
 app.use(bodyParser.urlencoded({extended: true})) // support encoded bodies
 
-app.get('/', express.static('../frontend/build'))
-
-
 
 /// USER REGISTRATION
 
@@ -139,6 +136,8 @@ app.post('/restaurant/register', (req, res) => {
 
     })
 })
+
+app.use('/', express.static('../frontend/build'))
 
 
 setupDB()
