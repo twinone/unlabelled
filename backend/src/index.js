@@ -50,7 +50,9 @@ app.use(function (req, res, next) {
 
 
 app.ws('/ws', function(ws, req) {
+    console.log("handling ws")
     ws.on('message', function(msg) {
+        console.log("sending msg:",msg)
         ws.send(msg);
     });
 });
