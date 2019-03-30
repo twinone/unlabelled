@@ -43,6 +43,9 @@ POST Body:
 }
 ```
 
+
+* GET /user/location/{lat}/{lng} // Sets the user's location (Android)
+
 (Low priority: tracking endpoint)
 
 
