@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.koushikdutta.async.http.AsyncHttpClient;
@@ -54,13 +55,66 @@ public class ConfirmationFragment extends Fragment {
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
                         Log.d("WebSocket", "Received: " + s);
+
+
+                        try {
+                            StatusMsg sm = new Gson().fromJson(s, StatusMsg.class);
+                            if (sm.status != null) {
+                                if (sm.status.equals("accepted")) {
+
+                                    ((TextView) getView().findViewById(R.id.tvState))
+                                            .setText("The restaurant is preparing your order");
+
+                                    ((TextView) getView().findViewById(R.id.tvMinutes))
+                                            .setText("15");
+
+                                    ((TextView) getView().findViewById(R.id.tvMinutes))
+                                            .setVisibility(View.VISIBLE);
+                                    ((TextView) getView().findViewById(R.id.tvDesc))
+                                            .setVisibility(View.VISIBLE);
+                                    ((TextView) getView().findViewById(R.id.tvRemaining))
+                                            .setVisibility(View.VISIBLE);
+
+
+                                }
+                                if (sm.status.equals("shipped")) {
+
+                                    ((TextView) getView().findViewById(R.id.tvState))
+                                            .setText("Your order is on its way!");
+                                    ((TextView) getView().findViewById(R.id.tvMinutes))
+                                            .setText("5");
+
+
+                                }
+
+                                if (sm.status.equals("delivered")) {
+
+                                    ((TextView) getView().findViewById(R.id.tvState))
+                                            .setText("Your order is delivered!");
+                                    ((TextView) getView().findViewById(R.id.tvMinutes))
+                                            .setVisibility(View.GONE);
+
+
+                                    ((TextView) getView().findViewById(R.id.tvDesc))
+                                            .setText("We hope you enjoyed your pizza!");
+
+
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("Error JSON", "WOW", e);
+                        }
+
                     }
                 });
             }
         });
 
 
+    }
 
+    public class StatusMsg {
+        public String status;
     }
 
 
