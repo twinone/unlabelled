@@ -2,6 +2,7 @@ package com.unlabeledfood;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -57,53 +58,7 @@ public class ConfirmationFragment extends Fragment {
                         Log.d("WebSocket", "Received: " + s);
 
 
-                        try {
-                            StatusMsg sm = new Gson().fromJson(s, StatusMsg.class);
-                            if (sm.status != null) {
-                                if (sm.status.equals("accepted")) {
-
-                                    ((TextView) getView().findViewById(R.id.tvState))
-                                            .setText("The restaurant is preparing your order");
-
-                                    ((TextView) getView().findViewById(R.id.tvMinutes))
-                                            .setText("15");
-
-                                    ((TextView) getView().findViewById(R.id.tvMinutes))
-                                            .setVisibility(View.VISIBLE);
-                                    ((TextView) getView().findViewById(R.id.tvDesc))
-                                            .setVisibility(View.VISIBLE);
-                                    ((TextView) getView().findViewById(R.id.tvRemaining))
-                                            .setVisibility(View.VISIBLE);
-
-
-                                }
-                                if (sm.status.equals("shipped")) {
-
-                                    ((TextView) getView().findViewById(R.id.tvState))
-                                            .setText("Your order is on its way!");
-                                    ((TextView) getView().findViewById(R.id.tvMinutes))
-                                            .setText("5");
-
-
-                                }
-
-                                if (sm.status.equals("delivered")) {
-
-                                    ((TextView) getView().findViewById(R.id.tvState))
-                                            .setText("Your order is delivered!");
-                                    ((TextView) getView().findViewById(R.id.tvMinutes))
-                                            .setVisibility(View.GONE);
-
-
-                                    ((TextView) getView().findViewById(R.id.tvDesc))
-                                            .setText("We hope you enjoyed your pizza!");
-
-
-                                }
-                            }
-                        } catch (Exception e) {
-                            Log.e("Error JSON", "WOW", e);
-                        }
+                        onStringResponse(s);
 
                     }
                 });
@@ -111,6 +66,63 @@ public class ConfirmationFragment extends Fragment {
         });
 
 
+    }
+
+    private Handler mHandler = new Handler();
+
+    private void onStringResponse(final String s) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    StatusMsg sm = new Gson().fromJson(s, StatusMsg.class);
+                    if (sm.status != null) {
+                        if (sm.status.equals("accepted")) {
+
+
+                            ((TextView) getView().findViewById(R.id.tvState))
+                                    .setText("The restaurant is preparing your order");
+
+
+                            ((TextView) getView().findViewById(R.id.tvMinutes))
+                                    .setVisibility(View.VISIBLE);
+                            ((TextView) getView().findViewById(R.id.tvDesc))
+                                    .setVisibility(View.VISIBLE);
+                            ((TextView) getView().findViewById(R.id.tvRemaining))
+                                    .setVisibility(View.VISIBLE);
+
+
+                        }
+                        if (sm.status.equals("shipped")) {
+
+                            ((TextView) getView().findViewById(R.id.tvState))
+                                    .setText("Your order is on its way!");
+                            ((TextView) getView().findViewById(R.id.tvRemaining))
+                                    .setText("5");
+
+
+                        }
+
+                        if (sm.status.equals("delivered")) {
+
+                            ((TextView) getView().findViewById(R.id.tvState))
+                                    .setText("Your order is delivered!");
+                            ((TextView) getView().findViewById(R.id.tvMinutes))
+                                    .setVisibility(View.GONE);
+
+
+                            ((TextView) getView().findViewById(R.id.tvDesc))
+                                    .setText("We hope you enjoyed your pizza!");
+
+
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("Error JSON", "WOW", e);
+                }
+            }
+        });
     }
 
     public class StatusMsg {
