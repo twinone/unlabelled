@@ -31,14 +31,14 @@ function RegisterScreen() {
       alert('Please enter all the fields.')
     else {
       registerRestaurant({ name, latLng, types }).then(r => {
-        console.log(r)
         if (r.error) {
           alert(r.error)
           return null
         } else {
           setAuth({
             restaurant: name,
-            token: r.token
+            token: r.token,
+            loggedIn: true
           })
         }
       })
