@@ -108,7 +108,7 @@ public class PizzaIngredientsFragment extends Fragment {
                 } else {
                     cheese.setBackgroundResource(R.drawable.cheesebw);
                 }
-                selCheese = !selCheese;
+                selCheese = !selCheese  ;
             }
         });
 
