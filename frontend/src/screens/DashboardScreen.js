@@ -53,7 +53,14 @@ const ORDERS = [
   }
 ]
 
-const IncomingOrder = ({ name, picture, deliverTime, onAccept, onDecline }) => (
+const IncomingOrder = ({
+  name,
+  picture,
+  deliverTime,
+  onAccept,
+  onDecline,
+  toppings
+}) => (
   <Card style={{ flexDirection: 'column' }}>
     <CardMedia
       component="img"
@@ -67,6 +74,7 @@ const IncomingOrder = ({ name, picture, deliverTime, onAccept, onDecline }) => (
     >
       <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
       <div style={{ paddingBottom: 8 }}>Delivery {deliverTime}</div>
+      <Toppings toppings={toppings} />
       <div
         style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
       >
@@ -86,7 +94,15 @@ const PosedDiv = posed.div({
   hidden: { opacity: 0 }
 })
 
-const DelieveredOrder = ({ name, picture, deliverTime, onDelivered }) => (
+const Toppings = ({ toppings }) => toppings.map(e => <h5> {e} </h5>)
+
+const DelieveredOrder = ({
+  name,
+  picture,
+  deliverTime,
+  onDelivered,
+  toppings
+}) => (
   <Card style={{ flexDirection: 'column' }}>
     <CardMedia
       component="img"
@@ -104,13 +120,13 @@ const DelieveredOrder = ({ name, picture, deliverTime, onDelivered }) => (
     >
       <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
       <div style={{ paddingBottom: 8 }}>Accepted order {deliverTime}</div>
-
+      <Toppings toppings={toppings} />
       <Button onClick={onDelivered}>Delivered ✔️</Button>
     </CardContent>
   </Card>
 )
 
-const AcceptedOrder = ({ name, picture, deliverTime, onShipped }) => (
+const AcceptedOrder = ({ name, picture, deliverTime, onShipped, toppings }) => (
   <Card style={{ flexDirection: 'column' }}>
     <CardMedia
       component="img"
@@ -128,7 +144,7 @@ const AcceptedOrder = ({ name, picture, deliverTime, onShipped }) => (
     >
       <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
       <div style={{ paddingBottom: 8 }}>Accepted order {deliverTime}</div>
-
+      <Toppings toppings={toppings} />
       <Button onClick={onShipped}>Shipped</Button>
     </CardContent>
   </Card>
@@ -214,7 +230,7 @@ function DashboardScreen() {
 
   const deliveredOrder = order => () => {
     const newOrders = orders.filter(obj => obj.id !== order.id)
-    setOrders(newOrdersx)
+    setOrders(newOrders)
     socket.send(
       JSON.stringify({
         status: 'delivered'
