@@ -1,66 +1,59 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   Button,
   Card,
   CardHeader,
   CardContent,
-  CardMedia,
-  LinearProgress
+  CardMedia
 } from '@material-ui/core'
 import AuthContext from '../globals/useToken'
-import FoodTypes from '../components/FoodTypes'
-//import ProgressIndicator from '../components/ProgressIndicator'
+import ProgressIndicator from '../components/ProgressIndicator'
+import posed from 'react-pose'
 
-const FOOD_TYPES = ['Burger', 'Kebab', 'Pizza']
-const orders = [
+const ORDERS = [
   {
-    name: 'Pizza ORDER',
+    name: 'Pizza order',
     picture:
       'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes'
+    deliverTime: '30 minutes',
+    status: 'incoming',
+    id: 2323
   },
   {
-    name: 'Food ORDER',
+    name: 'Food order',
     picture:
       'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes'
+    deliverTime: '30 minutes',
+    status: 'incoming',
+    id: 2325
   },
   {
-    name: 'Food ORDER',
+    name: 'Food order',
     picture:
       'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes'
+    deliverTime: '30 minutes',
+    status: 'accepted',
+    id: 2311
   },
   {
-    name: 'Food ORDER',
+    name: 'Food order',
     picture:
       'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes'
+    deliverTime: '30 minutes',
+    status: 'incoming',
+    id: 888
   },
   {
-    name: 'Food ORDER',
+    name: 'Food order',
     picture:
       'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes'
+    deliverTime: '30 minutes',
+    status: 'incoming',
+    id: 287
   }
 ]
 
-const Order = ({ name, picture, deliverTime }) => (
-  <Card style={{ flexDirection: 'column' }}>
-    <CardMedia
-      component="img"
-      alt="Contemplative Reptile"
-      //   className={classes.media}
-      height="140px"
-      image={picture}
-      title="Contemplative Reptile"
-    />
-    <CardHeader title={name} />
-    <CardContent>Delivery {deliverTime}</CardContent>
-  </Card>
-)
-
-const IncomingOrder = ({ name, picture, deliverTime }) => (
+const IncomingOrder = ({ name, picture, deliverTime, onAccept, onDecline }) => (
   <Card style={{ flexDirection: 'column' }}>
     <CardMedia
       component="img"
@@ -69,18 +62,31 @@ const IncomingOrder = ({ name, picture, deliverTime }) => (
       image={picture}
       title="Contemplative Reptile"
     />
-    <CardContent style={{ flexDirection: 'column', alignItems: 'center' }}>
+    <CardContent
+      style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}
+    >
       <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
       <div style={{ paddingBottom: 8 }}>Delivery {deliverTime}</div>
-      <div style={{ flexDirection: 'row' }}>
-        <Button style={{ flex: 1 }}>Accept</Button>
-        <Button style={{ flex: 1 }}>Decline</Button>
+      <div
+        style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
+      >
+        <Button style={{ flex: 1 }} onClick={onAccept}>
+          Accept
+        </Button>
+        <Button style={{ flex: 1 }} onClick={onDecline}>
+          Decline
+        </Button>
       </div>
     </CardContent>
   </Card>
 )
 
-const AcceptedOrder = ({ name, picture, deliverTime }) => (
+const PosedDiv = posed.div({
+  visible: { opacity: 1 },
+  hidden: { opacity: 0 }
+})
+
+const AcceptedOrder = ({ name, picture, deliverTime, onShipped }) => (
   <Card style={{ flexDirection: 'column' }}>
     <CardMedia
       component="img"
@@ -97,28 +103,61 @@ const AcceptedOrder = ({ name, picture, deliverTime }) => (
       }}
     >
       <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
-      <div style={{ paddingBottom: 8 }}>Delivery {deliverTime}</div>
+      <div style={{ paddingBottom: 8 }}>Accepted order {deliverTime}</div>
 
-      <Button>Ship it</Button>
+      <Button onClick={onShipped}>Shipped</Button>
     </CardContent>
   </Card>
 )
 
+function PosedAcceptedOrder(props) {
+  const [mounted, setMount] = useState(false)
+
+  useEffect(() => {
+    setMount(true)
+    return () => {
+      setMount(false)
+    }
+  }, [])
+
+  return (
+    <PosedDiv pose={mounted ? 'visible' : 'hidden'}>
+      <AcceptedOrder {...props} />
+    </PosedDiv>
+  )
+}
+
 const WEB_SOCKET_URL = 'ws://twinone.xyz:17001/ws'
 
 function DashboardScreen() {
-  const name = 'Restaurant'
-  const types = ['Burger', 'Kebab']
   const [{ restaurantName }, setAuth] = useContext(AuthContext)
-  const onDelete = () => {}
-
+  const [orders, setOrders] = useState(ORDERS)
   useEffect(() => {
     const socket = new WebSocket(WEB_SOCKET_URL)
     console.log(socket)
     socket.addEventListener('message', e => {
       console.log(e)
+      socket.send('HELLO SERVER!')
     })
   }, [])
+
+  const deleteOrder = id => () => {
+    const newOrders = orders.filter(obj => obj.id !== id)
+    setOrders(newOrders)
+    fetch('/rejected')
+  }
+
+  const acceptOrder = order => () => {
+    const newOrders = orders.filter(obj => obj.id !== order.id)
+    setOrders([{ ...order, status: 'accepted' }, ...newOrders])
+    fetch('/accept')
+  }
+
+  const shipOrder = id => () => {
+    const newOrders = orders.filter(obj => obj.id !== id)
+    setOrders(newOrders)
+    fetch('/shipped')
+  }
 
   return (
     <div
@@ -130,39 +169,40 @@ function DashboardScreen() {
         flexDirection: 'column'
       }}
     >
-      <h4> !!!! + {restaurantName}</h4>
-      <FoodTypes
-        foodTypes={FOOD_TYPES}
-        currentTypes={['Kebab', 'Pizza']}
-        setTypes={() => {}}
-      />
-      <div style={{ flexDirection: 'row' }}>
-        <div style={styles.gridContainer}>
-          <h4>Incoming orders</h4>
-          <div
-            style={{
-              paddingRight: 89,
-              ...styles.grid
-            }}
-          >
-            {orders.map(IncomingOrder)}
-          </div>
-        </div>
-        <div style={{ flexDirection: 'column' }}>
-          <h4>Accepted Orders</h4>
-          <div
-            style={{
-              ...styles.grid
-            }}
-          >
-            {orders.map(AcceptedOrder)}
-          </div>
-        </div>
+      <div>
+        <h1
+          style={{
+            fontWeight: '200'
+          }}
+        >
+          {restaurantName}
+        </h1>
       </div>
+      {orders.length === 0 ? (
+        <ProgressIndicator />
+      ) : (
+        <div style={styles.gridContainer}>
+          <h4>Orders</h4>
+          <div style={styles.grid}>
+            {orders.map(e =>
+              e.status !== 'incoming' ? (
+                <PosedAcceptedOrder {...e} onShipped={shipOrder(e.id)} />
+              ) : (
+                <IncomingOrder
+                  {...e}
+                  onAccept={acceptOrder(e)}
+                  onDecline={deleteOrder(e.id)}
+                />
+              )
+            )}
+          </div>
+        </div>
+      )}
       <Button
         onClick={() => {
           setAuth({
             token: null,
+            loggedIn: false,
             restaurant: ''
           })
         }}
@@ -176,14 +216,15 @@ function DashboardScreen() {
 const styles = {
   grid: {
     display: 'grid',
-    gridTemplateColumns: '200px 200px',
-    gridColumnGap: '10px',
-    gridRowGap: '10px'
+    gridTemplateColumns: '200px 200px 200px',
+    gridColumnGap: '18px',
+    gridRowGap: '18px'
   },
   gridContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }
 

@@ -12,24 +12,25 @@ function App() {
     loggedIn: false
   })
 
-  const [cookies, setCookie] = useCookies(['token', 'restaurant'])
-  const setAuthContext = ({ token, restaurant }) => {
+  const [cookies, setCookie] = useCookies(['token', 'restaurant', 'loggedIn'])
+  const setAuthContext = ({ token, restaurant, loggedIn }) => {
     setAuth({
       token,
-      restaurantName: restaurant
+      restaurantName: restaurant,
+      loggedIn
     })
     setCookie('token', token)
     setCookie('restaurant', restaurant)
+    setCookie('loggedIn', loggedIn)
   }
 
   useEffect(() => {
     setAuthContext(cookies)
   }, [])
-  console.log(auth.token)
-  if (auth.token === null) console.log('ITS NULL')
+
   return (
     <AuthContext.Provider value={[auth, setAuthContext]}>
-      {auth.token !== null ? <DashboardScreen /> : <RegisterScreen />}
+      {auth.loggedIn ? <DashboardScreen /> : <RegisterScreen />}
     </AuthContext.Provider>
   )
 }
