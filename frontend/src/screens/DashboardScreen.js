@@ -17,6 +17,7 @@ const ORDERS = [
       'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
     deliverTime: '30 minutes',
     status: 'incoming',
+    toopings: ['KEBAB', 'peperone'],
     id: 2323
   },
   {
@@ -70,13 +71,17 @@ const IncomingOrder = ({
       title="Contemplative Reptile"
     />
     <CardContent
-      style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}
+      style={{ flexDirection: 'column', flex: 1, alignItems: 'left' }}
     >
       <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
-      <div style={{ paddingBottom: 8 }}>Delivery {deliverTime}</div>
       <Toppings toppings={toppings} />
       <div
-        style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          justifyContent: 'space-between',
+          width: '100%'
+        }}
       >
         <Button style={{ flex: 1 }} onClick={onAccept}>
           Accept
@@ -94,7 +99,17 @@ const PosedDiv = posed.div({
   hidden: { opacity: 0 }
 })
 
-const Toppings = ({ toppings }) => toppings.map(e => <h5> {e} </h5>)
+const Toppings = ({ toppings }) =>
+  toppings.length > 0 ? (
+    <>
+      <div style={{ fontSize: 16 }}>Ingredients</div>
+      <ul>
+        {toppings.map(e => (
+          <li> {e} </li>
+        ))}
+      </ul>
+    </>
+  ) : null
 
 const DelieveredOrder = ({
   name,
@@ -114,14 +129,13 @@ const DelieveredOrder = ({
     <CardContent
       style={{
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'left',
         paddingBottom: '0px !important'
       }}
     >
       <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
-      <div style={{ paddingBottom: 8 }}>Accepted order {deliverTime}</div>
       <Toppings toppings={toppings} />
-      <Button onClick={onDelivered}>Delivered ✔️</Button>
+      <Button onClick={onDelivered}>Delivered</Button>
     </CardContent>
   </Card>
 )
@@ -138,12 +152,11 @@ const AcceptedOrder = ({ name, picture, deliverTime, onShipped, toppings }) => (
     <CardContent
       style={{
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'left',
         paddingBottom: '0px !important'
       }}
     >
       <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
-      <div style={{ paddingBottom: 8 }}>Accepted order {deliverTime}</div>
       <Toppings toppings={toppings} />
       <Button onClick={onShipped}>Shipped</Button>
     </CardContent>

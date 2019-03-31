@@ -48,7 +48,7 @@ function RegisterScreen() {
   return (
     <div style={styles.container}>
       <Card style={styles.card}>
-        <CardHeader title="UNLABELLED for restaurants" />
+        <CardHeader title="Unlabeled for restaurants" />
         <CardContent style={styles.content}>
           <Input
             placeholder="restaurant name"
