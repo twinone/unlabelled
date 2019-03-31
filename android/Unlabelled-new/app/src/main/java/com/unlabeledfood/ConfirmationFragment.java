@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -21,6 +22,9 @@ import com.koushikdutta.async.http.WebSocket;
  */
 public class ConfirmationFragment extends Fragment {
 
+
+    private View mRoot;
+    private WebSocket mWebSocket;
 
     PizzaIngredientsFragment.OrderReq getOrderReq() {
         return ((MainActivity) getActivity()).getOrderReq();
@@ -37,6 +41,15 @@ public class ConfirmationFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_confirmation, container, false);
         initWS();
 
+
+        RatingBar rb = v.findViewById(R.id.rating);
+        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (mWebSocket != null) mWebSocket.send("{\"rating\":" + (int) rating + "}");
+            }
+        });
+        mRoot = v;
         return v;
     }
 
@@ -49,6 +62,7 @@ public class ConfirmationFragment extends Fragment {
                     return;
                 }
 
+                mWebSocket = webSocket;
                 PizzaIngredientsFragment.OrderReq req = getOrderReq();
                 String json = new Gson().toJson(req);
 
@@ -81,24 +95,24 @@ public class ConfirmationFragment extends Fragment {
                         if (sm.status.equals("accepted")) {
 
 
-                            ((TextView) getView().findViewById(R.id.tvState))
+                            ((TextView) mRoot.findViewById(R.id.tvState))
                                     .setText("The restaurant is preparing your order");
 
 
-                            ((TextView) getView().findViewById(R.id.tvMinutes))
+                            ((TextView) mRoot.findViewById(R.id.tvMinutes))
                                     .setVisibility(View.VISIBLE);
-                            ((TextView) getView().findViewById(R.id.tvDesc))
+                            ((TextView) mRoot.findViewById(R.id.tvDesc))
                                     .setVisibility(View.VISIBLE);
-                            ((TextView) getView().findViewById(R.id.tvRemaining))
+                            ((TextView) mRoot.findViewById(R.id.tvRemaining))
                                     .setVisibility(View.VISIBLE);
 
 
                         }
                         if (sm.status.equals("shipped")) {
 
-                            ((TextView) getView().findViewById(R.id.tvState))
+                            ((TextView) mRoot.findViewById(R.id.tvState))
                                     .setText("Your order is on its way!");
-                            ((TextView) getView().findViewById(R.id.tvRemaining))
+                            ((TextView) mRoot.findViewById(R.id.tvRemaining))
                                     .setText("5");
 
 
@@ -106,16 +120,23 @@ public class ConfirmationFragment extends Fragment {
 
                         if (sm.status.equals("delivered")) {
 
-                            ((TextView) getView().findViewById(R.id.tvState))
+                            ((TextView) mRoot.findViewById(R.id.tvState))
                                     .setText("Your order is delivered!");
-                            ((TextView) getView().findViewById(R.id.tvMinutes))
-                                    .setVisibility(View.GONE);
+                            ((TextView) mRoot.findViewById(R.id.tvRemaining))
+                                    .setVisibility(View.INVISIBLE);
+                            ((TextView) mRoot.findViewById(R.id.tvMinutes))
+                                    .setVisibility(View.INVISIBLE);
 
 
-                            ((TextView) getView().findViewById(R.id.tvDesc))
+                            ((TextView) mRoot.findViewById(R.id.tvDesc))
                                     .setText("We hope you enjoyed your pizza!");
 
 
+                            (mRoot.findViewById(R.id.tvRateIt))
+                                    .setVisibility(View.VISIBLE);
+
+                            (mRoot.findViewById(R.id.rating))
+                                    .setVisibility(View.VISIBLE);
                         }
                     }
                 } catch (Exception e) {

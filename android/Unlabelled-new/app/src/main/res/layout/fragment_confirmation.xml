@@ -52,7 +52,24 @@
         android:visibility="invisible" />
 
 
+    <TextView
+        android:id="@+id/tvRateIt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:text="Rate your pizza:"
+        android:visibility="invisible" />
+
     <!--Rating bar-->
+    <RatingBar
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:stepSize="1"
+        android:visibility="gone" />
 
 
 </LinearLayout>
