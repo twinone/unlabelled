@@ -18,6 +18,9 @@ import android.widget.RelativeLayout;
  */
 public class PizzaIngredientsFragment extends Fragment {
 
+    private static final float BASE_PRICE = 3.00f;
+    private static final float INGREDIENT_PRICE = 0.5f;
+
     private RelativeLayout mRoot;
 
     boolean olives;
@@ -75,7 +78,7 @@ public class PizzaIngredientsFragment extends Fragment {
             image_tomato.setBackgroundResource(tomato ? R.drawable.tomatocolour : R.drawable.tomatobw);
             image_pepperoni.setBackgroundResource(pepperoni ? R.drawable.pepperonicolour : R.drawable.pepperonibw);
             image_cheese.setBackgroundResource(cheese ? R.drawable.cheesecolour : R.drawable.cheesebw);
-            image_mushroom.setBackgroundResource(mushroom?R.drawable.mushroomcolour:R.drawable.mushroombw);
+            image_mushroom.setBackgroundResource(mushroom ? R.drawable.mushroomcolour : R.drawable.mushroombw);
 
             pizza_olives.setVisibility(olives ? View.VISIBLE : View.INVISIBLE);
             pizza_onion.setVisibility(onion ? View.VISIBLE : View.INVISIBLE);
@@ -95,13 +98,24 @@ public class PizzaIngredientsFragment extends Fragment {
 
     void updateFloatingIngredientsPosition() {
         View pizza = mRoot.findViewById(R.id.pizza);
-        int cy = pizza.getHeight()/2 + (int)pizza.getY() -pizza.getPaddingTop();
-        int size = pizza.getWidth();
+        int cy = pizza.getHeight() / 2 + (int) pizza.getY() - pizza.getPaddingTop();
+        float scale = 0.6f;
+
+        float step = (float) Math.PI * 2 / imgs.length;
+        float startingAngle = -(float) Math.PI / 2 - step / 2;
+        int radius = (int)(pizza.getWidth()/3.3);
+
         for (int i = 0; i < imgs.length; i++) {
+            int offsetX = (int) (radius * Math.cos(startingAngle + i * step));
+            int offsetY = (int) (radius * Math.sin(startingAngle + i * step));
+
             View vv = imgs[i];
-            vv.setX(mRoot.getWidth() / 2 - vv.getWidth() / 2);
+            vv.setScaleX(scale);
+            vv.setScaleY(scale);
+
+            vv.setX(mRoot.getWidth() / 2 - vv.getWidth() / 2 + offsetX);
             //vv.setBackgroundColor(Color.parseColor("#ff0000"));
-            vv.setY(cy - vv.getHeight()/2);
+            vv.setY(cy - vv.getHeight() / 2 + offsetY);
         }
     }
 
@@ -160,8 +174,21 @@ public class PizzaIngredientsFragment extends Fragment {
         return v;
     }
 
+    public class OrderReq {
+        public String foodType;
+        public String[] toppings;
+        public float price;
+        public float lat;
+        public float lng;
+    }
+
 
     private void openConfirmFragment() {
+
+        // create OrderReq
+
+
+
         getActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
