@@ -1,67 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardContent,
-  CardMedia
-} from '@material-ui/core'
+import { Button, Card, CardContent, CardMedia } from '@material-ui/core'
 import AuthContext from '../globals/useToken'
 import ProgressIndicator from '../components/ProgressIndicator'
 import posed from 'react-pose'
 
-const ORDERS = [
-  {
-    name: 'Pizza order',
-    picture:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes',
-    status: 'incoming',
-    toopings: ['KEBAB', 'peperone'],
-    id: 2323
-  },
-  {
-    name: 'Food order',
-    picture:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes',
-    status: 'delivered',
-    id: 2325
-  },
-  {
-    name: 'Food order',
-    picture:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes',
-    status: 'accepted',
-    id: 2311
-  },
-  {
-    name: 'Food order',
-    picture:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes',
-    status: 'incoming',
-    id: 888
-  },
-  {
-    name: 'Food order',
-    picture:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-    deliverTime: '30 minutes',
-    status: 'incoming',
-    id: 287
-  }
-]
-
-const IncomingOrder = ({
-  name,
-  picture,
-  deliverTime,
-  onAccept,
-  onDecline,
-  toppings
-}) => (
+const IncomingOrder = ({ name, picture, onAccept, onDecline, toppings }) => (
   <Card style={{ flexDirection: 'column' }}>
     <CardMedia
       component="img"
@@ -163,23 +106,6 @@ const AcceptedOrder = ({ name, picture, deliverTime, onShipped, toppings }) => (
   </Card>
 )
 
-function PosedAcceptedOrder(props) {
-  const [mounted, setMount] = useState(false)
-
-  useEffect(() => {
-    setMount(true)
-    return () => {
-      setMount(false)
-    }
-  }, [])
-
-  return (
-    <PosedDiv pose={mounted ? 'visible' : 'hidden'}>
-      <AcceptedOrder {...props} />
-    </PosedDiv>
-  )
-}
-
 const WEB_SOCKET_URL = 'ws://twinone.xyz:17001/ws'
 const socket = new WebSocket(WEB_SOCKET_URL)
 
@@ -280,7 +206,7 @@ function DashboardScreen() {
           <div style={styles.grid}>
             {orders.map(e => {
               if (e.status === 'accepted')
-                return <PosedAcceptedOrder {...e} onShipped={shipOrder(e)} />
+                return <AcceptedOrder {...e} onShipped={shipOrder(e)} />
               if (e.status === 'delivered')
                 return (
                   <DelieveredOrder {...e} onDelivered={deliveredOrder(e)} />
