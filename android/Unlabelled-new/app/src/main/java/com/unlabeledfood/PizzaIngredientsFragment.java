@@ -1,13 +1,15 @@
 package com.unlabeledfood;
 
 
-import android.graphics.Color;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -170,7 +172,12 @@ public class PizzaIngredientsFragment extends Fragment {
         image_cheese.setOnClickListener(listener);
         image_mushroom.setOnClickListener(listener);
 
-
+        v.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openConfirmFragment();
+            }
+        });
         return v;
     }
 
@@ -180,13 +187,20 @@ public class PizzaIngredientsFragment extends Fragment {
         public float price;
         public float lat;
         public float lng;
+        public OrderReq(String a, String b[], float c, float d, float e){
+            foodType=a;
+            toppings=b;
+            price=c;
+            lat=d;
+            lng=e;
+        }
     }
 
 
     private void openConfirmFragment() {
 
         // create OrderReq
-
+        createOrderReq();
 
 
         getActivity()
@@ -196,6 +210,29 @@ public class PizzaIngredientsFragment extends Fragment {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void createOrderReq() {
+        int x = 0;
+        for(int i = 0; i<imgs.length;++i)
+            if(imgs[i].getVisibility()==View.VISIBLE)  ++x;
+        String toppings[] = new String[x];
+        float price =BASE_PRICE+x*INGREDIENT_PRICE;
+        --x;
+        for(int i = 0; i<imgs.length;++i)
+            if(imgs[i].getVisibility()==View.VISIBLE) {
+                switch (i) {
+                    case 0: toppings[x] = "olives"; break;
+                    case 1: toppings[x] = "onion"; break;
+                    case 2: toppings[x] = "tomato"; break;
+                    case 3: toppings[x] = "pepperoni"; break;
+                    case 4: toppings[x] = "cheese"; break;
+                    case 5: toppings[x] = "mushroom"; break;
+                }
+                x--;
+            }
+        Log.d("Hola",((MainActivity)getActivity()).lat+","+((MainActivity)getActivity()).lng);
+        OrderReq request = new OrderReq("pizza",toppings,price, ((MainActivity)getActivity()).lat,((MainActivity)getActivity()).lng);
     }
 
 
