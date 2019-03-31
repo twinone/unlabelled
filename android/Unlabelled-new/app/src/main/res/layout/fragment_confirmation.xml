@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ConfirmationFragment">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".ConfirmationFragment"
+    >
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:layout_marginTop="70dp"
+        android:id="@+id/tvState"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="The restaurant is preparing your order"
+        android:layout_marginBottom="16dp"
+        android:textSize="30sp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tvDesc"
+        android:layout_marginTop="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Your order will be delivered in"
+        android:layout_marginBottom="16dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvRemaining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="15"
+        android:textSize="150sp" />
+
+    <TextView
+        android:id="@+id/tvMinutes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="minutes"
+        android:layout_marginBottom="16dp"
+        android:textSize="30sp" />
+
+
+    <!--Rating bar-->
+
+
+</LinearLayout>

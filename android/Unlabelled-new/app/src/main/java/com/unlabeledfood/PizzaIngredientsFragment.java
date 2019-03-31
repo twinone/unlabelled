@@ -14,6 +14,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,7 +108,7 @@ public class PizzaIngredientsFragment extends Fragment {
 
         float step = (float) Math.PI * 2 / imgs.length;
         float startingAngle = -(float) Math.PI / 2 - step / 2;
-        int radius = (int)(pizza.getWidth()/3.3);
+        int radius = (int) (pizza.getWidth() / 3.3);
 
         for (int i = 0; i < imgs.length; i++) {
             int offsetX = (int) (radius * Math.cos(startingAngle + i * step));
@@ -119,6 +122,17 @@ public class PizzaIngredientsFragment extends Fragment {
             //vv.setBackgroundColor(Color.parseColor("#ff0000"));
             vv.setY(cy - vv.getHeight() / 2 + offsetY);
         }
+
+
+        List<String> ts = new ArrayList<>();
+        for (int i = 0; i < imgs.length; i++) {
+            if (imgs[i].getVisibility() == View.VISIBLE) {
+                ts.add(toppingPosToString(i));
+            }
+        }
+        float totalPrice = BASE_PRICE + INGREDIENT_PRICE * ts.size();
+        ((Button) mRoot.findViewById(R.id.btn_confirm))
+                .setText("Confirm Order (Total: " + String.valueOf(totalPrice) + "€)");
     }
 
 
@@ -178,6 +192,8 @@ public class PizzaIngredientsFragment extends Fragment {
                 openConfirmFragment();
             }
         });
+
+        updateFloatingIngredientsPosition();
         return v;
     }
 
@@ -187,12 +203,13 @@ public class PizzaIngredientsFragment extends Fragment {
         public float price;
         public float lat;
         public float lng;
-        public OrderReq(String a, String b[], float c, float d, float e){
-            foodType=a;
-            toppings=b;
-            price=c;
-            lat=d;
-            lng=e;
+
+        public OrderReq(String a, String b[], float c, float d, float e) {
+            foodType = a;
+            toppings = b;
+            price = c;
+            lat = d;
+            lng = e;
         }
     }
 
@@ -212,27 +229,42 @@ public class PizzaIngredientsFragment extends Fragment {
                 .commit();
     }
 
+    private String toppingPosToString(int pos) {
+        switch (pos) {
+            case 0:
+                return "olives";
+            case 1:
+                return "onion";
+            case 2:
+                return "tomato";
+            case 3:
+                return "pepperoni";
+            case 4:
+                return "cheese";
+            case 5:
+                return "mushroom";
+        }
+        return "";
+    }
+
     private void createOrderReq() {
-        int x = 0;
-        for(int i = 0; i<imgs.length;++i)
-            if(imgs[i].getVisibility()==View.VISIBLE)  ++x;
-        String toppings[] = new String[x];
-        float price =BASE_PRICE+x*INGREDIENT_PRICE;
-        --x;
-        for(int i = 0; i<imgs.length;++i)
-            if(imgs[i].getVisibility()==View.VISIBLE) {
-                switch (i) {
-                    case 0: toppings[x] = "olives"; break;
-                    case 1: toppings[x] = "onion"; break;
-                    case 2: toppings[x] = "tomato"; break;
-                    case 3: toppings[x] = "pepperoni"; break;
-                    case 4: toppings[x] = "cheese"; break;
-                    case 5: toppings[x] = "mushroom"; break;
-                }
-                x--;
+        List<String> ts = new ArrayList<>();
+        for (int i = 0; i < imgs.length; i++) {
+            if (imgs[i].getVisibility() == View.VISIBLE) {
+                ts.add(toppingPosToString(i));
             }
-        Log.d("Hola",((MainActivity)getActivity()).lat+","+((MainActivity)getActivity()).lng);
-        OrderReq request = new OrderReq("pizza",toppings,price, ((MainActivity)getActivity()).lat,((MainActivity)getActivity()).lng);
+        }
+
+        Log.d("Location", ((MainActivity) getActivity()).lat + "," + ((MainActivity) getActivity()).lng);
+        OrderReq request = new OrderReq("pizza",
+                ts.toArray(new String[ts.size()]),
+                BASE_PRICE + INGREDIENT_PRICE * ts.size(),
+                ((MainActivity) getActivity()).lat,
+                ((MainActivity) getActivity()).lng);
+
+
+        ((MainActivity) getActivity()).setOrderReq(request);
+
     }
 
 

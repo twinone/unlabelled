@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1234;
     public float lat;
     public float lng;
+    private PizzaIngredientsFragment.OrderReq mOrderReq;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +39,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 makeUseOfNewLocation(location);
             }
 
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
 
-            public void onProviderEnabled(String provider) {}
+            public void onProviderEnabled(String provider) {
+            }
 
-            public void onProviderDisabled(String provider) {}
+            public void onProviderDisabled(String provider) {
+            }
         };
 
 // Register the listener with the Location Manager to receive location updates
@@ -71,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Permission has already been granted
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-
 
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -162,5 +166,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    public PizzaIngredientsFragment.OrderReq getOrderReq() {
+        return mOrderReq;
+    }
+
+    public void setOrderReq(PizzaIngredientsFragment.OrderReq mOrderReq) {
+        this.mOrderReq = mOrderReq;
     }
 }
