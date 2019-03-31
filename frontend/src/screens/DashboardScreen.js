@@ -183,6 +183,8 @@ function PosedAcceptedOrder(props) {
 const WEB_SOCKET_URL = 'ws://twinone.xyz:17001/ws'
 const socket = new WebSocket(WEB_SOCKET_URL)
 
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
+
 function DashboardScreen() {
   const [{ restaurantName }, setAuth] = useContext(AuthContext)
   const [orders, setOrders] = useState([])
@@ -201,7 +203,7 @@ function DashboardScreen() {
         addOrder({
           picture:
             'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
-          name: order.foodType + ' Order',
+          name: capitalize(order.foodType) + ' order',
           price: order.price,
           latLng: [order.lat, order.lng],
           toppings: order.toppings,
