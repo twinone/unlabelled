@@ -70,12 +70,12 @@ public class PizzaIngredientsFragment extends Fragment {
             }
 
 
-            image_olives.setImageResource(olives ? R.drawable.olivescolour : R.drawable.olivesbw);
-            image_onion.setImageResource(onion ? R.drawable.onioncolour : R.drawable.onionbw);
-            image_tomato.setImageResource(tomato ? R.drawable.tomatocolour : R.drawable.tomatobw);
-            image_pepperoni.setImageResource(pepperoni ? R.drawable.pepperonicolour : R.drawable.pepperonibw);
-            image_cheese.setImageResource(cheese ? R.drawable.cheesecolour : R.drawable.cheesebw);
-            //image_mushroom.setImageResource(mushroom?R.drawable.mushroomcolour:R.drawable.mushroombw);
+            image_olives.setBackgroundResource(olives ? R.drawable.olivescolour : R.drawable.olivesbw);
+            image_onion.setBackgroundResource(onion ? R.drawable.onioncolour : R.drawable.onionbw);
+            image_tomato.setBackgroundResource(tomato ? R.drawable.tomatocolour : R.drawable.tomatobw);
+            image_pepperoni.setBackgroundResource(pepperoni ? R.drawable.pepperonicolour : R.drawable.pepperonibw);
+            image_cheese.setBackgroundResource(cheese ? R.drawable.cheesecolour : R.drawable.cheesebw);
+            image_mushroom.setBackgroundResource(mushroom?R.drawable.mushroomcolour:R.drawable.mushroombw);
 
             pizza_olives.setVisibility(olives ? View.VISIBLE : View.INVISIBLE);
             pizza_onion.setVisibility(onion ? View.VISIBLE : View.INVISIBLE);
@@ -100,7 +100,7 @@ public class PizzaIngredientsFragment extends Fragment {
         for (int i = 0; i < imgs.length; i++) {
             View vv = imgs[i];
             vv.setX(mRoot.getWidth() / 2 - vv.getWidth() / 2);
-            vv.setBackgroundColor(Color.parseColor("#ff0000"));
+            //vv.setBackgroundColor(Color.parseColor("#ff0000"));
             vv.setY(cy - vv.getHeight()/2);
         }
     }
@@ -137,7 +137,7 @@ public class PizzaIngredientsFragment extends Fragment {
         pizza_tomato.setImageResource(R.drawable.tomatocolour);
         pizza_pepperoni.setImageResource(R.drawable.pepperonicolour);
         pizza_cheese.setImageResource(R.drawable.cheesecolour);
-
+        pizza_mushroom.setImageResource(R.drawable.mushroomcolour);
 
         for (int i = 0; i < imgs.length; i++) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(500, 500);

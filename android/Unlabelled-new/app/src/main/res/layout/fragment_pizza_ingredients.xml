@@ -28,44 +28,44 @@
 
         <ImageButton
             android:id="@+id/olives"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@drawable/olivesbw"
             android:contentDescription="aaaa" />
 
         <ImageButton
             android:id="@+id/onion"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@drawable/onionbw"
             android:contentDescription="aaaa" />
 
         <ImageButton
             android:id="@+id/cheese"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@drawable/cheesebw"
             android:contentDescription="aaaa" />
 
         <ImageButton
             android:id="@+id/pepperoni"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@drawable/pepperonibw"
             android:contentDescription="aaaa" />
 
         <ImageButton
             android:id="@+id/tomato"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@drawable/tomatobw"
             android:contentDescription="aaaa" />
 
         <ImageButton
             android:id="@+id/mushroom"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:background="@drawable/tomatobw"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/mushroombw"
             android:contentDescription="aaaa" />
         <!--48dp x 48dp-->
         <!--ImageButtons-->
@@ -74,7 +74,6 @@
 
     <com.unlabeledfood.SquareImageView
         android:id="@+id/pizza"
-        android:background="#f00"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/btn_confirm"
