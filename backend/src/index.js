@@ -68,6 +68,7 @@ app.ws('/ws', function (ws, req) {
 
 
     ws.on('message', function (msg) {
+        broadcast(msg)
         console.log("got msg:", msg)
     })
 })
