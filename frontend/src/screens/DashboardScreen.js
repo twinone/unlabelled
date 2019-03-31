@@ -24,7 +24,7 @@ const ORDERS = [
     picture:
       'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
     deliverTime: '30 minutes',
-    status: 'incoming',
+    status: 'delivered',
     id: 2325
   },
   {
@@ -86,6 +86,30 @@ const PosedDiv = posed.div({
   hidden: { opacity: 0 }
 })
 
+const DelieveredOrder = ({ name, picture, deliverTime, onDelivered }) => (
+  <Card style={{ flexDirection: 'column' }}>
+    <CardMedia
+      component="img"
+      alt="Contemplative Reptile"
+      height="140px"
+      image={picture}
+      title="Contemplative Reptile"
+    />
+    <CardContent
+      style={{
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingBottom: '0px !important'
+      }}
+    >
+      <div style={{ fontSize: 23, paddingBottom: 8 }}>{name}</div>
+      <div style={{ paddingBottom: 8 }}>Accepted order {deliverTime}</div>
+
+      <Button onClick={onDelivered}>Delivered ✔️</Button>
+    </CardContent>
+  </Card>
+)
+
 const AcceptedOrder = ({ name, picture, deliverTime, onShipped }) => (
   <Card style={{ flexDirection: 'column' }}>
     <CardMedia
@@ -128,35 +152,74 @@ function PosedAcceptedOrder(props) {
 }
 
 const WEB_SOCKET_URL = 'ws://twinone.xyz:17001/ws'
+const socket = new WebSocket(WEB_SOCKET_URL)
 
 function DashboardScreen() {
   const [{ restaurantName }, setAuth] = useContext(AuthContext)
-  const [orders, setOrders] = useState(ORDERS)
+  const [orders, setOrders] = useState([])
+
+  const addOrder = order => {
+    setOrders([order, ...orders])
+  }
+
   useEffect(() => {
-    const socket = new WebSocket(WEB_SOCKET_URL)
-    console.log(socket)
-    socket.addEventListener('message', e => {
-      console.log(e)
-      socket.send('HELLO SERVER!')
+    socket.addEventListener('message', msg => {
+      const order = JSON.parse(msg.data)
+
+      if (order.foodType !== undefined) {
+        console.log(order)
+
+        addOrder({
+          picture:
+            'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg',
+          name: order.foodType + ' Order',
+          price: order.price,
+          latLng: [order.lat, order.lng],
+          toppings: order.toppings,
+          status: 'incoming'
+        })
+      }
     })
   }, [])
 
   const deleteOrder = id => () => {
     const newOrders = orders.filter(obj => obj.id !== id)
     setOrders(newOrders)
-    fetch('/rejected')
+    socket.send(
+      JSON.stringify({
+        status: 'rejected'
+      })
+    )
   }
 
   const acceptOrder = order => () => {
     const newOrders = orders.filter(obj => obj.id !== order.id)
     setOrders([{ ...order, status: 'accepted' }, ...newOrders])
-    fetch('/accept')
+    socket.send(
+      JSON.stringify({
+        status: 'accepted'
+      })
+    )
   }
 
-  const shipOrder = id => () => {
-    const newOrders = orders.filter(obj => obj.id !== id)
-    setOrders(newOrders)
-    fetch('/shipped')
+  const shipOrder = order => () => {
+    const newOrders = orders.filter(obj => obj.id !== order.id)
+    setOrders([{ ...order, status: 'delivered' }, ...newOrders])
+    socket.send(
+      JSON.stringify({
+        status: 'shipped'
+      })
+    )
+  }
+
+  const deliveredOrder = order => () => {
+    const newOrders = orders.filter(obj => obj.id !== order.id)
+    setOrders(newOrdersx)
+    socket.send(
+      JSON.stringify({
+        status: 'delivered'
+      })
+    )
   }
 
   return (
@@ -184,17 +247,22 @@ function DashboardScreen() {
         <div style={styles.gridContainer}>
           <h4>Orders</h4>
           <div style={styles.grid}>
-            {orders.map(e =>
-              e.status !== 'incoming' ? (
-                <PosedAcceptedOrder {...e} onShipped={shipOrder(e.id)} />
-              ) : (
+            {orders.map(e => {
+              if (e.status === 'accepted')
+                return <PosedAcceptedOrder {...e} onShipped={shipOrder(e)} />
+              if (e.status === 'delivered')
+                return (
+                  <DelieveredOrder {...e} onDelivered={deliveredOrder(e)} />
+                )
+              if (e.status === 'done') return null
+              return (
                 <IncomingOrder
                   {...e}
                   onAccept={acceptOrder(e)}
                   onDecline={deleteOrder(e.id)}
                 />
               )
-            )}
+            })}
           </div>
         </div>
       )}
