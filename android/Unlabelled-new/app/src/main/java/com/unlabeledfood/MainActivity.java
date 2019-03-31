@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1234;
     public float lat;
     public float lng;
-    private PizzaIngredientsFragment.OrderReq mOrderReq;
+    private PizzaIngredientsFragment.OrderReq mOrderReq ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
